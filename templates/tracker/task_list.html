@@ -1,0 +1,53 @@
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Список задач</title>
+    {% bootstrap_css %}
+    <style>
+        .color1 {
+            color: red;
+        }
+        .color2 {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container text-center mx-auto">
+        <h1>Список задач</h1>
+        <h2 class="color1">Не выполненные задачи</h2>
+        <ul class="list-group">
+            {% for task in tasks %}
+            {% if task.status != 'completed' %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ task.title }}
+                <form method="post" action="{% url 'complete_task' task.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Выполнено</button>
+                </form>
+                <a href="{% url 'edit_task' task.pk %}" class="btn btn-primary">Редактировать</a>
+                <a href="{% url 'delete_task' task.pk %}" class="btn btn-danger">Удалить</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+
+        <h2 class="color2">Выполненные задачи</h2>
+        <ul class="list-group">
+            {% for task in completed_tasks %}
+            <li class="list-group-item">{{ task.title }}</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url 'create_task' %}" class="btn btn-primary mt-3">Создать задачу</a>
+    </div>
+
+    {% bootstrap_javascript %}
+</body>
+
+</html>
